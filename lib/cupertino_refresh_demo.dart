@@ -6,6 +6,7 @@ import 'dart:math' show Random;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CupertinoRefreshControlDemo extends StatefulWidget {
   static const String routeName = '/cupertino/refresh';
@@ -18,38 +19,81 @@ class CupertinoRefreshControlDemo extends StatefulWidget {
 class _CupertinoRefreshControlDemoState
     extends State<CupertinoRefreshControlDemo> {
   List list = new List();
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     super.initState();
-    list.add("a${DateTime.now()}");
-    list.add("b${DateTime.now()}");
+    list.length = 16;
 
-    list.add("c${DateTime.now()}");
-    list.add("d${DateTime.now()}");
-    list.add("e${DateTime.now()}");
-    list.add("f${DateTime.now()}");
-    list.add("g${DateTime.now()}");
     setState(() {});
+
+    _scrollController.addListener(() {
+      print("${_scrollController.position.viewportDimension}");
+      print("${_scrollController.position.maxScrollExtent}");
+
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print("${_scrollController.position.viewportDimension}");
+        print("触发加载更多");
+        print("${MediaQuery.of(context).size.height}");
+
+        print("${_scrollController.position.pixels}");
+        handleLoadMore();
+        Fluttertoast.showToast(msg: "触发加载更多");
+      }
+    });
+  }
+
+  Future<void> handleLoadMore() async{
+    list.length = list.length + 6;
+    setState(() {
+
+    });
+    print("handleLoadMore1${DateTime.now()}");
+    doDelay();
+    print("handleLoadMore2${DateTime.now()}");
+
+    return null;
+  }
+
+  // 添加打印日志方便理解Future方法的执行顺序
+  doDelay() async {
+    await Future.delayed(Duration(seconds: 2), ()async{
+      print("doDelay1 ${DateTime.now()}");
+      await Future.delayed(Duration(seconds: 1));
+      print("doDelay2 ${DateTime.now()}");
+
+
+    }).then( (_) async{
+      print("doDelay3 ${DateTime.now()}");
+      await Future.delayed(Duration(seconds: 1));
+    }).whenComplete((){
+      print("doDelay4 ${DateTime.now()}");
+    });
+
   }
 
   Widget _getItem(int index) {
     if (list.length > 0) {
       if (index == list.length) {
-        return Column(
-          children: <Widget>[
-            Container(
-                color: Colors.grey,
-                width: MediaQuery.of(context).size.width,
-                height: 50.0,
-                alignment: FractionalOffset(0.5, 0.5),
-                child: Text("这里是加载更多哦。。",
-                    style: TextStyle(color: Color(0xffffffff)))),
-            Divider(
-              height: 0.5,
-              color: Colors.white,
-            )
-          ],
+        return Container(
+          color: Colors.grey,
+          child: Column(
+            children: <Widget>[
+              Container(
+                  color: Colors.grey,
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  alignment: FractionalOffset(0.5, 0.5),
+                  child: Text("这里是加载更多哦。。",
+                      style: TextStyle(color: Color(0xffffffff)))),
+              Divider(
+                height: 0.5,
+                color: Colors.white,
+              )
+            ],
+          ),
         );
       }
       return Column(
@@ -67,7 +111,7 @@ class _CupertinoRefreshControlDemoState
           )
         ],
       );
-    } else{
+    } else {
       return Text("empty");
     }
   }
@@ -92,8 +136,8 @@ class _CupertinoRefreshControlDemoState
             // To demonstrate the iOS behavior in this demo and to ensure that the list
             // always scrolls, we specifically use a [BouncingScrollPhysics] combined
             // with a [AlwaysScrollableScrollPhysics]
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
             slivers: <Widget>[
               CupertinoSliverNavigationBar(
                 largeTitle: const Text('Refresh'),
@@ -103,6 +147,7 @@ class _CupertinoRefreshControlDemoState
                 previousPageTitle: 'Cupertino',
               ),
               CupertinoSliverRefreshControl(
+                // 替换成我们自己的方法
                 onRefresh: () {
                   return Future<void>.delayed(const Duration(seconds: 2))
                     ..then<void>((_) {
@@ -120,7 +165,7 @@ class _CupertinoRefreshControlDemoState
                     childCount: list.length + 1,
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

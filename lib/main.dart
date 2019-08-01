@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:refresh_load/cupertino_refresh_demo.dart';
+import 'package:refresh_load/load_refresh.dart';
 import 'package:refresh_load/overscroll_demo.dart';
 
 void main() => runApp(MyApp());
@@ -112,6 +113,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return OverscrollDemo();
+                  }));
+                }),
+            MaterialButton(
+                disabledColor: Colors.grey,
+                color: Colors.blue,
+                textColor: Colors.white,
+                child: Text("去自定义刷新加载更多"),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return RefreshAndLoadDemo(title: "自定义刷新加载更多",);
                   }));
                 }),
             Text(
