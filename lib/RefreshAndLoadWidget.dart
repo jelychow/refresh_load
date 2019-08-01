@@ -30,20 +30,28 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
   void initState() {
     _scrollController.addListener(() {
 //      Fluttertoast.showToast(msg: "123");
-      print("pixels" + _scrollController.position.pixels.toString());
-      print("maxScrollExtent" +
-          _scrollController.position.maxScrollExtent.toString());
+//      print("pixels" + _scrollController.position.pixels.toString());
+//      print("maxScrollExtent" +
+//          _scrollController.position.maxScrollExtent.toString());
 
       ///判断当前滑动位置是不是到达底部，触发加载更多回调
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-
         if (this.widget.refreshAndLoadControl.needLoadMore) {
 //          Fluttertoast.showToast(msg: "boolean" + "${(this.widget.refreshAndLoadControl.needLoadMore)}");
           handleLoadMore();
         }
       }
     });
+
+    widget.refreshAndLoadControl.addListener(() {
+      setState(() {});
+      print("state change");
+      Future.delayed(Duration(seconds: 1), () {
+        _scrollController.notifyListeners();
+      });
+    });
+
     super.initState();
   }
 
@@ -51,7 +59,6 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
   void dispose() {
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +91,6 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
     double refreshTriggerPullDistance,
     double refreshIndicatorExtent,
   ) {
-
     print("state:${pulledExtent}");
 
     return Container(
@@ -218,4 +224,3 @@ class RefreshAndLoadControl extends ChangeNotifier {
     notifyListeners();
   }
 }
-

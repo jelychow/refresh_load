@@ -20,6 +20,7 @@ class _MyHomePageState extends State<RefreshAndLoadDemo> {
   void initState() {
     control.needLoadMore = true;
     control.dataList = this.dataList;
+    onLoadMore();
   }
 
   void _incrementCounter() {
@@ -62,19 +63,15 @@ class _MyHomePageState extends State<RefreshAndLoadDemo> {
     page = 0;
     await Future.delayed(Duration(seconds: 1));
     control.dataList = new List(12);
-    setState(() {
 
-    });
     return null;
   }
 
   Future<void> onLoadMore() async {
     await Future.delayed(Duration(seconds: 1));
     page++;
-    control.loadList(new List(6));
-    setState(() {
+    control.loadList(new List(12));
 
-    });
     return null;
   }
 
