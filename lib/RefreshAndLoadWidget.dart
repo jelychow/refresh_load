@@ -27,8 +27,9 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
 
   @override
   void initState() {
-    _scrollController.addListener(() {
 
+    // 注册滚动监听
+    _scrollController.addListener(() {
 
       ///判断当前滑动位置是不是到达底部，触发加载更多回调
       if (_scrollController.position.pixels ==
@@ -44,7 +45,9 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
       }
     });
 
+    // 监听控制器参数变化
     widget.refreshAndLoadControl.addListener(() {
+      // 刷新数据
       setState(() {});
       print("state change");
       // 手动通知滚动监听更新
