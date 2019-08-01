@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as m;
@@ -29,14 +28,15 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
   @override
   void initState() {
     _scrollController.addListener(() {
-//      Fluttertoast.showToast(msg: "123");
-//      print("pixels" + _scrollController.position.pixels.toString());
-//      print("maxScrollExtent" +
-//          _scrollController.position.maxScrollExtent.toString());
+
 
       ///判断当前滑动位置是不是到达底部，触发加载更多回调
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
+        //      Fluttertoast.showToast(msg: "123");
+      print("pixels" + _scrollController.position.pixels.toString());
+      print("maxScrollExtent" +
+          _scrollController.position.maxScrollExtent.toString());
         if (this.widget.refreshAndLoadControl.needLoadMore) {
 //          Fluttertoast.showToast(msg: "boolean" + "${(this.widget.refreshAndLoadControl.needLoadMore)}");
           handleLoadMore();
@@ -47,6 +47,7 @@ class _RefreshAndLoadWidgetState extends State<RefreshAndLoadWidget>
     widget.refreshAndLoadControl.addListener(() {
       setState(() {});
       print("state change");
+      // 手动通知滚动监听更新
       Future.delayed(Duration(seconds: 1), () {
         _scrollController.notifyListeners();
       });
